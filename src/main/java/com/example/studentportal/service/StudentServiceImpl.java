@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -53,5 +54,49 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void deleteStudent(Long id) {
         studentDb.remove(id);
+    }
+
+    @Override
+    public List<Student> searchStudentsByName(String name) {
+        if (name == null || name.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String searchName = name.toLowerCase();
+        return studentDb.values()
+                .stream()
+                .filter(student -> student.getName().toLowerCase().contains(searchName))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Student> searchStudentsByCourse(String course) {
+        if (course == null || course.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String searchCourse = course.toLowerCase();
+        return studentDb.values()
+                .stream()
+                .filter(student -> student.getCourse().toLowerCase().contains(searchCourse))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Student> searchStudents(String query) {
+        if (query == null || query.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String searchQuery = query.toLowerCase();
+        return studentDb.values()
+                .stream()
+                .filter(student ->
+                        student.getName().toLowerCase().contains(searchQuery) ||
+                                student.getEmail().toLowerCase().contains(searchQuery) ||
+                                student.getCourse().toLowerCase().contains(searchQuery) ||
+                                (student.getStudentId() != null && student.getStudentId().toLowerCase().contains(searchQuery))
+                )
+                .collect(Collectors.toList());
     }
 }

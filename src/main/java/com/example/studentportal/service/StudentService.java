@@ -16,4 +16,10 @@ public interface StudentService {
 
     void deleteStudent(Long id);
 
+    // Nouvelles méthodes de recherche
+    List<Student> searchStudentsByName(String name);
+
+    List<Student> searchStudentsByCourse(String course);
+
+    List<Student> searchStudents(String query);
 }
